@@ -1,0 +1,73 @@
+prontera,144,178,8	script	PVP ROOM	796,{
+mes "[ ^0065DFPVP Warper^000000 ]";
+mes "Welcome To PVP Warper";
+mes "I Can Help You Warp To PVP Room";
+next;
+mes "[ ^0065DFPVP Warper^000000 ]";
+mes "You Ready?";
+//switch(select("PvP Room 1:PvP Room 2:PvP Room 3:No")) {
+switch(select("Yes:No")) {
+case 1:
+set zz_point,zz_point+1;
+set my_point,zz_point;
+//announce ""+ strcharinfo(0) +" Has Entered The PVP Room.." + zz_point + " Times ",bc_all; //announce and end
+announce ""+ strcharinfo(0) +" Has Entered The PVP Room",bc_all; //announce and end
+warp "guild_vs3" ,0,0;
+close;
+end;
+//case 2:
+//set zz_point,zz_point+1;
+//set my_point,zz_point;
+//announce ""+ strcharinfo(0) +" Has Entered The PVP Room.." + zz_point + " Times ",bc_all; //announce and end
+//warp "guild_vs1" ,0,0;
+//close;
+//end;
+//case 3:
+//set zz_point,zz_point+1;
+//set my_point,zz_point;
+//announce ""+ strcharinfo(0) +" Has Entered The PVP Room.." + zz_point + " Times ",bc_all; //announce and end
+//warp "guild_vs4" ,0,0;
+//close;
+//end;
+case 5:
+close;
+}
+OnInit:
+initnpctimer;
+end;
+
+OnTimer1000:
+delwaitingroom;
+waitingroom "PVP Room - "+getmapusers("guild_vs3")+" Users.",0;
+initnpctimer;
+end;
+
+//OnInit:
+//waitingroom "Pvp Room- "+getmapusers("guild_vs3")+" Users.",0,0;
+//end;
+}
+
+//gonryun,165,127,4	duplicate(PVP ROOM)	PVP ROOM#gon	405
+
+
+guild_vs2	mapflag	nosave
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	nowarpto
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	noreturn
+guild_vs1	mapflag	nosave
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	noreturn
+guild_vs3	mapflag	nosave
+guild_vs3	mapflag	nowarp
+guild_vs3	mapflag	pvp
+guild_vs3	mapflag	nowarpto
+guild_vs3	mapflag	noteleport
+guild_vs3	mapflag	noreturn
+guild_vs4	mapflag	nosave
+guild_vs4	mapflag	nowarp
+guild_vs4	mapflag	nowarpto
+guild_vs4	mapflag	noteleport
+guild_vs4	mapflag	noreturn
