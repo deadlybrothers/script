@@ -1,0 +1,338 @@
+
+//  _______   __      ____	  ____ 	    __	__  ____    __  __    __   __ __      __   __  ____    _      ____       
+// /__  __/  / /     / __ \      / __ \    / / / / /__  \  / / /_/ __/ /_ / // /     / /__/ / /__  \  / /__  / __ \  _____
+//   / /    / /_    / /_/ /     / / / /   / / / / ____/ / / / __  /_  __// // /     / _  _ / ____/ / / // / / /_/ / / __  \
+//  / /    / __ \  / ____/     / / / /   / / / / / __  / / / / /   / /   \_  /     / // /// / __  / /  __/ / ____/ / /  /_/
+// / /    / / / / / /__	      / /_/ /_  / /_/ / / /_/ / / / / /   / /   __/ /     / // /// / /_/ / / _ \  / /__	  / /
+///_/    /_/ /_/  \____/      \_______/ \____/  \____/ /_/ /_/   /_/    \__/     /_//_///  \____/ /_/ \_\ \____/ /_/
+//=============================================================================
+//
+//   Gold Room Advance Script - Mining Gold for wealth - Please Leave Credit   \\
+//=============================================================================
+//POWERED by: rudolp
+//[The Quality Maker]
+//Time Finished :6:28 PM 6/7/2009
+//Please Report any bug and suggestions.
+//===== Compatible With: =================================================================
+//= Any eAthena Version
+//=============Gold Room Settings===================
+//This should always be enable for a better Gold Room System.
+//==================================================
+//ordeal_1-2	mapflag	noskill
+ordeal_1-2	mapflag	nomemo
+ordeal_1-2	mapflag	nobranch
+ordeal_1-2	mapflag	noloot 
+ordeal_1-2	mapflag	noexp
+ordeal_1-2	mapflag	nodrop
+ordeal_1-2	mapflag	novending
+ordeal_1-2	mapflag	nowarp
+ordeal_1-2	mapflag	nowarpto
+ordeal_1-2	mapflag	pvp
+//ordeal_1-2	mapflag	noreturn
+//=================================================
+
+ordeal_1-2,0,0,0	script	Gold Room	-1,{
+
+OnInit:
+//No. of Mine Guardian.
+//For golden peko it is default to 100 and 4 seconds~2 seconds spawn rate.
+	set .guardian,50;
+
+//Type of guardian. 0 = normal 1 = extreme
+	set .@guardiantype,0;
+
+	if(.@guardiantype == 0){
+		monster "ordeal_1-2",0,0,"Guard Pacific",1369,.guardian,"";	
+	}else{
+		monster "ordeal_1-2",0,0,"Guard Pacific",1369,.guardian,"";
+	}
+end;
+OnNPCKillEvent:
+//===== Configurations: ========================================================================
+
+//Max gold can a player get after killing 1 golden peko (default 5 note:this will increase if luk bonus is enable).
+	set .@maxgaingold,5;
+
+//Apply gold penalty. 0 = no 1 = yes
+	set .@penalty1,0;
+
+//The Maximum no. of gold Penalty.
+	set .@maxpenalty1,0;
+
+//Apply speed & HP penalty. 0 = no 1 = yes 
+	set .@penalty2,0;
+
+//Gold limitation penalty must be enable
+	set .@maxgold,9999;
+
+//The maximum no. of hp penalty by %.
+	set .@maxpenalty2,0;
+
+//Enable luk bonus. 0=no 1=yes
+	set .@lukbonus,0;
+
+//If luk Bonus is enable,luk divider default 49 w/ 99 max parameter. Note: the quotient of your max parameter and .@lukdiv must not grater than 5 to avoid over mining.
+	set .@lukdiv,49;
+
+//Show Server Name. 0=no 1=yes
+	set .@showservername,1;
+
+//Name of your Server
+	set .@servername$,"[The Quality Maker]";
+
+//=========================================================================================
+
+
+if (getmapxy(@mapname$,@mapx,@mapy,0) == -1) goto L_Finish;
+if (@mapname$ == "ordeal_1-2"){
+	set @bonus,0;
+	set @deduction,0;
+	set @gain,rand (.@maxgaingold);
+
+//Luk bonus
+	if (.@lukbonus != 0){
+		set @bonus,readparam(bLuk)/.@lukdiv;
+	}
+
+//Gold Penalty
+	if (.@penalty1 != 0){
+		set @deduction,rand(.@maxpenalty1);
+		if(@deduction == 0) set @deduction,1;	
+	}
+
+	set @gain, @gain + @bonus - @deduction;
+	set gold, gold + @gain ;
+
+//Displaying Gained Gold
+	if(.@showservername != 0){
+		if(gold%5 == 0){ //Show Server Name every 10 gold gain.
+			dispbottom "===============Brought to you by===============";
+			dispbottom "==============" + .@servername$ +"==============";
+		}
+	}
+
+	if(@gain){
+ 		dispbottom "-|You got: " +@gain+ " gold| - |Total: " +gold+ " gold|- ";
+
+	}else{
+		dispbottom "-|You got: NOTHING! |- ";
+	}
+
+
+
+	if (.@penalty2 != 0){
+		if (gold >= .@maxgold/2 && gold <=.@maxgold/2+20){
+			 sc_start	SC_DECREASEAGI,240000,10;	 	
+		}else if(gold >.@maxgold){
+		 	percentheal (.@maxpenalty2*-1),(.@maxpenalty2*-1);
+		 	heal 0,0; //For him to die
+		}
+	}
+
+	if(paid == 0){
+		mapannounce "ordeal_1-2"," x( "+strcharinfo(0)+" is a cheater!",bc_map;
+		dispbottom "Go out you bastard!";
+		set gold,0;
+		warp "prontera", 172, 152;
+	}
+		end;
+}
+
+
+OnPCDieEvent: 
+
+if (getmapxy(@mapname$,@mapx,@mapy,0) == -1) goto L_Finish;
+if (@mapname$ == "ordeal_1-2"){
+		dispbottom "Holy Shit you died!";
+		dispbottom "All of your gold will gone!";
+		set alive, 0;
+		set paid, 0;
+		end;
+}
+
+L_Finish:
+end;
+}
+
+
+
+//===============================================
+//warper
+//===============================================
+ordeal_1-2,154,156,5	script	Gold Miner	813,{
+	mes "[Gold Miner]";
+	if(gold >=50){
+		goto wa;
+	}
+	mes "Want to go now?";
+	mes "Your gold is just "+gold+" you can still get more.";
+	end;
+wa:
+	mes "Want to go now?";
+	 if(select("Yes", "No") == 1) {
+		set alive,1;
+        		warp "prontera", 156, 188;
+    	}
+	end;
+}
+
+prontera,165,151,4	script	Gold Room#pront	813,{
+	set @name$,"prontera";
+	callfunc "goldmain";
+}
+
+aldebaran,133,116,6	script	Gold Room Warperer#alde	813,{
+	set @name$,"aldebaran";
+	callfunc "goldmain";
+	end;
+}
+
+alberta,32,242,4	script	Gold Room Warperer#alb	813,{
+	set @name$,"alberta";
+	callfunc "goldmain";
+	end;
+}
+payon,184,106,4	script	Gold Room Warperer#pay	813,{
+	set @name$,"payon";
+	callfunc "goldmain";
+	end;
+}
+
+geffen,117,108,6	script	Gold Room Warperer#gef	813,{
+	set @name$,"geffen";
+	callfunc "goldmain";
+	end;
+}
+
+function	script	goldmain	{
+	if (getgmlevel() >= 90){
+		mes "[Gold Room Warperer]";
+	if(sex != 0){
+		mes "Hello Sir what can I do for you?";
+	}else{
+		mes "Hello Maam what can I do for you?";
+	}
+
+	next;
+	menu "Enter Mining Site",start,"Please end the mine Site. Now!",-,"Please Open the mine Site. Now!",G_open,"Nothing",C_s;
+	next;
+	mes "[Gold Room Warperer]";
+	mapannounce "ordeal_1-2","Excuse me Miners.",bc_map;
+	mes "Ok.";
+	next;
+	mapannounce "ordeal_1-2",strcharinfo(0) +" wants to end the Gold Room for a while",bc_map;
+	mes "Just a second I will just ask them to";
+	mes "go out in the mining site";
+	next;
+	mapannounce "ordeal_1-2","Please settle your things and move quitely",bc_map;
+	mes "[Gold Room Warperer]";
+	mes ".............";
+	mes "........";
+	next;
+	mes "[Gold Room Warperer]";
+	mes "Ok your done";
+	set .opengoldroom,1;
+	areawarp "ordeal_1-2",21,286,286,22,"prontera", 156, 105;
+OnInit:
+	waitingroom "Hunting Gold Room",0;
+	end;
+	}
+
+	if(.opengoldroom == 0){
+		goto start;
+	}else{
+		mes "[Gold Room Warperer]";
+		mes "Sorry!";
+		mes "The Mining Site is endd.";
+		end;
+	}
+G_open:
+	mes "[Gold Room Warperer]";
+	mes "Ok.";
+	mes "Mining Site is Already Available.";
+	announce " Gold Room is open for public!",bc_map;
+	set .opengoldroom,0;
+end;
+
+start:
+	if ( alive == 0){
+		set gold,0;
+	}
+	mes "[Gold Room Warperer]";
+	mes "What do you want?";
+	next;
+	menu "To the Gold Room",-,"Exchange Gold",exchange,"Nothing",C_s;
+	mes "[Gold Room Warperer]";
+	mes "Hmm..";
+	mes "It cost 100,000z";
+    	mes "Would you like to go now to the gold room?";
+    	if(select("Yes", "No") == 1) {
+		if(@name$ == "prontera") savepoint "prontera", 172, 152;
+		if(@name$ == "aldebaran") savepoint "aldebaran",154, 120;
+		if(@name$ == "alberta") savepoint "alberta",32, 234;
+		if(@name$ == "payon") savepoint "payon",184, 98;
+		if(@name$ == "geffen") savepoint "geffen",124, 85;
+		if (Zeny < 100000) goto nomoney;
+		set Zeny, Zeny - 100000;
+		set alive, 1;
+		set paid, 1;
+        		warp "ordeal_1-2", 156, 155;
+		
+    	}
+    	end;
+nomoney:
+	mes "[Gold Room Warperer]";
+	mes "Sorry insufficient balance";
+	end;
+exchange:
+	mes "[Gold Room Warperer]";
+	mes "Hmm...let me see";
+	mes "You have " +gold+ ".";
+	if (gold == 0) goto nogold; 
+	mes "Ok get this.";
+	next;
+        if (checkweight(969,gold) == 0) goto L_OverWeight;
+	getitem 969, gold;
+	set gold, 0;
+	emotion e_gg;
+	end;
+L_OverWeight:
+	mes "[Gold Room Warperer]";
+	mes "Sorry your overweight";
+	end;
+nogold:
+	end;
+C_s:
+	end;
+}
+
+
+//============================================================
+
+//===========================================================
+//========================================
+//warps you may edit this one for your convenience
+//========================================
+ordeal_1-2,73,265,0	warp	ord500	1,1,prontera,156,188
+ordeal_1-2,129,194,0	warp	ord501	1,1,prontera,156,188
+ordeal_1-2,130,194,0	warp	ord502	1,1,prontera,156,188
+ordeal_1-2,178,193,0	warp	ord503	1,1,prontera,156,188
+ordeal_1-2,290,130,0	warp	ord504	1,1,prontera,156,188
+ordeal_1-2,241,281,0	warp	ord505	1,1,prontera,156,188
+ordeal_1-2,66,25,0 	warp	ord506	1,1,prontera,156,188
+ordeal_1-2,202,129,0	warp	ord509	1,1,prontera,156,188
+ordeal_1-2,105,154,0	warp	ord510	1,1,prontera,156,188
+
+//============Spawns=================
+
+ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,200,0,0,0
+ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,200,0,0,0
+ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,200,0,0,0
+ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,200,0,0,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,300,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,300,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,50,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,30,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,30,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,30,40000,20000,0
+//ordeal_1-2,0,0,0,0	monster	Golden Pecopeco	1369,20,40000,20000,0
