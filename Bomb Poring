@@ -1,0 +1,1009 @@
+//=========================== Bomb Event =============================//
+// v1.4                                                               //
+//======= Author =====================================================//
+// by Enalds                                                          //
+//======= Description ================================================//
+// No Description 						      //
+//======= Comments ===================================================//
+// v1.4 Fixed the common bug.								      								  //
+//====================================================================//
+
+-	script	Bomb#announcer	-1,{
+OnInit:
+	disablenpc "MrBomb";
+	disablenpc "Bomb#warp";
+	end;
+//==========================
+// GM can Start this Event
+//==========================
+
+OnMobEventBomb:
+end;
+
+OnWhisperGlobal:
+if(@whispervar0$ == "Start"){
+if(getgmlevel() < 99) end;
+mes "Are you sure you want to start the Bomb Poring Event now?";
+if(select("No.:Yes.") == 1) close;
+next;
+mes "The Bomb Poring Event Has started.";
+close2;
+
+OnMon0000:
+OnMon1900:
+OnTue1900:
+OnWed1900:
+OnThu1900:
+OnFri1900:
+OnSat1900:
+OnSun1900:
+	setmapflag "quiz_02",mf_noskill;
+	setmapflag "quiz_02",mf_noicewall;
+	setmapflag "quiz_02",mf_nobranch;
+	setmapflag "quiz_02",mf_nomemo;
+	setmapflag "quiz_02",mf_noteleport;
+	setmapflag "quiz_02",mf_nowarp;
+	setmapflag "quiz_02",mf_nosave;
+	disablenpc "Bomb#warp";
+	announce "Mr. Bomb: Bomb Event!",bc_all;
+	sleep2 10000;
+	announce "Mr. Bomb: If you want to join this event, go to Prontera and click me, here in 155,119. You cannot use Animals.",0;
+	sleep2 10000;
+	announce "Mr. Bomb: After 1 Minute I will close the entrance.",0;
+	sleep2 10000;
+	announce "Mr. Bomb: So please go to the middle of Prontera 155,119 and click me to join.",0;
+	enablenpc "MrBomb";
+	initnpctimer;
+	end;
+	OnTimer30000:
+	announce "Mr. Bomb: Last 30 seconds.",0;
+	sleep2 5000;
+	announce "Mr. Bomb: If you want to join please go to Prontera 155,119.",0;
+	end;
+	
+OnTimer50000:
+	announce "Mr. Bomb: Last 10 seconds.",0;
+	end;
+	
+OnTimer55000:
+	announce "Mr. Bomb: 5.",0;
+	end;
+	
+OnTimer56000:
+	announce "Mr. Bomb: 4.",0;
+	end;
+	
+OnTimer57000:
+	announce "Mr. Bomb: 3.",0;
+	end;
+	
+OnTimer58000:
+	announce "Mr. Bomb: 2.",0;
+	end;
+	
+OnTimer59000:
+	announce "Mr. Bomb: 1.",0;
+	end;
+
+OnTimer60000:
+	announce "Mr. Bomb: Time's up.",0;
+	sleep2 2000;
+	end;
+	
+OnTimer61000:
+	disablenpc "MrBomb";
+	donpcevent "Bomb#evnt1::OnEnable";
+	stopnpctimer;
+	end;
+	}
+end;
+}
+
+//=====
+//
+//=====
+prontera,155,119,6	script	MrBomb	900,{
+	if( checkriding() ) goto R_Peco; //Remove the Peco Peco
+	if( checkfalcon() ) goto Falcon; //Remove the Falcon
+	sc_end sc_ALL;
+	warp "quiz_02.gat" ,336,345;
+	
+R_Peco:
+	mes "[Mr Bomb]";
+	mes "Please remove your Peco/Dragon/Mado/Warg before you can enter this event";
+	close;
+Falcon:
+	mes "[Mr Bomb]";
+	mes "Please remove your Falcon before you can enter this event";
+	close;
+}
+
+quiz_02,336,362,6,	script	Bomb#warp	900,{
+warp "quiz_02",367,345;
+end;
+}
+//======
+//
+//======
+
+quiz_02,373,345,6	script	Bomb#evnt1	900,{
+
+	mes "[Mr. Bomb]";
+	mes "Please tell me your name";
+	next;
+	input .@name$;
+	if(.@name$ != strcharinfo(0)) {
+		mes "[Mr. Bomb]";
+		mes "Are you sure thats your character name?";
+		close;
+	}
+	mes "[Mr. Bomb]";
+	mes "Congrats. You've won.";
+	close2;
+	announce "Mr. Bomb: We have a winner, "+.@name$+".",0;
+	warp "prontera",155,182;
+	goto Prize;
+	end;
+	
+OnEnable:
+	sleep2 5000;
+	mapannounce "quiz_02","Mr. Bomb: Bomb Poring Event will start in 30 seconds.",bc_map,"0x33FF66";
+	sleep2 30000;
+	goto L_Start;
+	end;
+	
+L_Start:
+	if(getmapusers("quiz_02") == 0) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") >= 1) {
+	mapannounce "quiz_02","Bomb: First wave",0;
+	sleep2 8000;
+//=======================
+// First Wave - One
+//=======================
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// First Wave - Two
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// First Wave - Three
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// First Wave - Four
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// First Wave - Five
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// First Wave - Six
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 15000;
+	mapannounce "quiz_02","Mr. Bomb: You are survive the First Wave",0;
+	goto L_Start2;
+	end;
+	}
+
+L_Start2:
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") > 1) {
+	mapannounce "quiz_02","Bomb: Second wave",0;
+	sleep2 8000;
+//=======================
+// Second Wave - One
+//=======================
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Second Wave - Two
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Second Wave - Three
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Second Wave - Four
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Second Wave - Five
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Second Wave - Six
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 15000;
+	mapannounce "quiz_02","Mr. Bomb: You are survive the Second Wave",0;
+	goto L_Start3;
+	end;
+	}
+
+
+L_Start3:
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") > 1) {
+	mapannounce "quiz_02","Bomb: Third wave",0;
+	sleep2 8000;
+//=======================
+// Third Wave - One
+//=======================
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Third Wave - Two
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Third Wave - Three
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Third Wave - Four
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Third Wave - Five
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Third Wave - Six
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 15000;
+	goto L_Start4;
+	end;
+	}
+
+L_Start4:
+
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") > 1) {
+	mapannounce "quiz_02","Bomb: Fourth wave",0;
+	sleep2 8000;
+//=======================
+// Fourth Wave - One
+//=======================
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Fourth Wave - Two
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Fourth Wave - Three
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 8000;
+//=======================
+// Fourth Wave - Four
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 8000;
+//=======================
+// Fourth Wave - Five
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 8000;
+//=======================
+// Fourth Wave - Six
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 15000;
+	mapannounce "quiz_02","Mr. Bomb: You are survive the Fourth Wave",0;
+	goto L_Start5;
+	}
+
+L_Start5:
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	if(getmapusers("quiz_02") > 1) {
+	mapannounce "quiz_02","Bomb: Five wave (Final Wave) hard one!",0;
+	sleep2 5000;
+//=======================
+// Five Wave - One
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 5000;
+//=======================
+// Five Wave - Two
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 5000;
+//=======================
+// Five Wave - Three
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 5000;
+//=======================
+// Five Wave - Four
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 5000;
+//=======================
+// Five Wave - Five
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep 5000;
+//=======================
+// Five Wave - Six
+//=======================
+	if(getmapusers("quiz_02") == 1) goto L_Champ;
+	if(getmapusers("quiz_02") == 0) goto L_None;
+	monster "quiz_02",336,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",341,351,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",330,340,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",329,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",342,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",336,339,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,352,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",325,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",325,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,335,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",346,356,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",324,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",347,346,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,334,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",335,357,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	
+	monster "quiz_02",333,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,348,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",338,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",333,343,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",329,337,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",344,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",343,338,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	monster "quiz_02",327,353,"Bomb",1904,1,"Bomb#announcer::OnMobEventBomb";
+	sleep2 15000;
+	goto L_Champ;
+	end;
+	}
+
+L_Champ:
+	//areawarp "quiz_02",324,357,347,334,"quiz_02",363,346; // Transfort
+	killmonsterall "quiz_02";
+	mapannounce "quiz_02","Bomb: Click the Warp to go here. And Click me to claim your price.",0;
+	hideoffnpc "Bomb#evnt1";
+	enablenpc "Bomb#evnt1";
+	enablenpc "Bomb#warp";
+	end;
+	
+L_None:
+	
+	announce "Mr. Bomb: No Winner.",0;
+	killmonsterall "quiz_02";
+	end;
+
+//================
+// Prize
+//================
+
+Prize:
+	set @prize2,rand (1,3);
+	if (@prize2 == 1) goto P12;
+	if (@prize2 == 2) goto P22;
+	if (@prize2 == 3) goto P23;
+
+P12:
+	mes "You got 50 Poring Coin";
+	getitem 7227,50;
+	close;
+P22:
+	mes "You got 100 Cash Point"; 
+	atcommand "!cash 100";
+	close;
+P23:
+	mes "You got 30 TCG Card"; 
+	getitem 7227,30;
+	close;
+
+}
